@@ -23,6 +23,7 @@ plot_scatter({clsC,clsD,clsE},{'Class C', 'Class D', 'Class E'})
 
 % Plot Decision Boundries
 % % MED
+% BOOBOES
 
 function plotErrorEllipse(mu, Sigma, p)
     s = -2 * log(1 - p);
