@@ -16,6 +16,7 @@ plot_scatter({clsA},{'Class A'})
 plotErrorEllipse(mean(clsA), cov, 10);
 legend('Class A Data', 'Covariance Error')
 
+
 % % % Plot A vs B
 plot_scatter({clsA,clsB},{'Class A', 'Class B'})
 % % % Plot C vs D vs E
