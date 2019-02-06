@@ -10,15 +10,30 @@ clsE = gen_cluster(150, [10 5], [10 -5;-5 20]);
 
 % % 2. Plot samples
 % % % Plot Samples and Unit standard deviation contours
-% How to get that angle?
+v = var(clsA);
+cov = [0 v(:,1);v(:,2) 0];
+plot_scatter({clsA},{'Class A'})
+plotErrorEllipse(mean(clsA), cov, 10);
+legend('Class A Data', 'Covariance Error')
 
 % % % Plot A vs B
 plot_scatter({clsA,clsB},{'Class A', 'Class B'})
 % % % Plot C vs D vs E
 plot_scatter({clsC,clsD,clsE},{'Class C', 'Class D', 'Class E'})
 
+% Plot Decision Boundries
+% % MED
 
+function plotErrorEllipse(mu, Sigma, p)
+    s = -2 * log(1 - p);
 
+    [V, D] = eig(Sigma * s);
+
+    t = linspace(0, 2 * pi);
+    a = (V * sqrt(D)) * [cos(t(:))'; sin(t(:))'];
+
+    plot(a(1, :) + mu(1), a(2, :) + mu(2));
+end
 % This routine plots an ellipse with centre (x,y), axis lengths a,b
 % with major axis at an angle of theta radians from the horizontal.
 function plot_ellipse(x,y,theta,a,b)
@@ -31,21 +46,15 @@ function plot_ellipse(x,y,theta,a,b)
 end
 
 function plot_scatter( classes, legends)
-    if length(classes) ~= length(legends)
-        error('Legends must match classes')
-    end
-    
-    figure
-    sz = 5
+    figure;
+    sz = 5;
     for i=1:length(classes)
-        cls = classes{i}
-        x = cls(:,1);
-        y = cls(:,2);
+        x = classes{i}(:,1);
+        y = classes{i}(:,2);
         scatter(x,y,sz,'filled');
         hold on;
     end
     legend(legends)
-    hold off
 end
 
 function cluster = gen_cluster( N, mu, sigma )
