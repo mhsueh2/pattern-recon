@@ -10,12 +10,16 @@ clsE = gen_cluster(150, [10 5], [10 -5;-5 20]);
 
 % % 2. Plot samples
 % % % Plot Samples and Unit standard deviation contours
-% How to get that angle?
+
+% % % % % % % % % % % % % % % % How to get that angle?
 
 % % % Plot A vs B
 plot_scatter({clsA,clsB},{'Class A', 'Class B'})
 % % % Plot C vs D vs E
 plot_scatter({clsC,clsD,clsE},{'Class C', 'Class D', 'Class E'})
+
+% Plot Decision Boundries
+% % MED
 
 
 
@@ -35,12 +39,11 @@ function plot_scatter( classes, legends)
         error('Legends must match classes')
     end
     
-    figure
-    sz = 5
+    figure;
+    sz = 5;
     for i=1:length(classes)
-        cls = classes{i}
-        x = cls(:,1);
-        y = cls(:,2);
+        x = classes{i}(:,1);
+        y = classes{i}(:,2);
         scatter(x,y,sz,'filled');
         hold on;
     end
