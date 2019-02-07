@@ -1,28 +1,55 @@
 clear all; close all; clc;
 
+% Define the Classes {N, True Mean, True Variance}
+keys = {'N', 'mu', 'sigma', 'name'};
+clsA = containers.Map(keys, {200, [5 10], [8 0;0 4], 'Class A'}, 'UniformValues',false);
+clsB = containers.Map(keys, {200, [10 15], [8 0;0 4], 'Class B'},'UniformValues',false);
+clsC = containers.Map(keys, {100, [5 10], [8 4;4 40], 'Class C'},'UniformValues',false);
+clsD = containers.Map(keys, {200, [15 10], [8 0;0 8], 'Class D'},'UniformValues',false);
+clsE = containers.Map(keys, {150, [10 5], [10 -5;-5 20], 'Class E'},'UniformValues',false);
+
+classes = {clsA, clsB, clsC, clsD, clsE};
 % Generating Clusters
 % % 1. Generates uncorrelate clusters
-clsA = gen_cluster(200, [5 10], [8 0;0 4]);
-clsB = gen_cluster(200, [10 15], [8 0;0 4]);
-clsC = gen_cluster(100, [5 10], [8 4;4 40]);
-clsD = gen_cluster(200, [15 10], [8 0;0 8]);
-clsE = gen_cluster(150, [10 5], [10 -5;-5 20]);
+for i=1:length(classes)
+    class = classes{i};
+    class('sample') = gen_cluster(class('N'), class('mu'), class('sigma'));
+end
 
 % % 2. Plot samples
 % % % Plot Samples and Unit standard deviation contours
-v = var(clsA);
-cov = [0 v(:,1);v(:,2) 0];
-plot_scatter({clsA},{'Class A'})
-plotErrorEllipse(mean(clsA), cov, 10);
-legend('Class A Data', 'Covariance Error')
+figure;
+for i=1:length(classes)
+    subplot(length(classes), 1, i);
+    name = classes{i}('name');
+    sample = classes{i}('sample');
+    plot_scatter({sample}, {});
+    plot_error_variance(classes{i}, 10);
+    legend(name, 'Covariance Error');
+    hold off;
+end
 
 % % % Plot A vs B
-plot_scatter({clsA,clsB},{'Class A', 'Class B'})
+sample_A = classes{1}('sample');
+sample_B = classes{2}('sample');
+figure;
+plot_scatter({sample_A,sample_B},{'Class A', 'Class B'})
+
 % % % Plot C vs D vs E
-plot_scatter({clsC,clsD,clsE},{'Class C', 'Class D', 'Class E'})
+sample_C = classes{3}('sample');
+sample_D = classes{4}('sample');
+sample_E = classes{5}('sample');
+figure;
+plot_scatter({sample_C,sample_D,sample_E},{'Class C', 'Class D', 'Class E'})
 
 % Plot Decision Boundries
 % % MED
+
+function plot_error_variance(class, p)
+    mu = class('mu');
+    sigma = class('sigma');
+    plotErrorEllipse(mu, sigma, p);
+end
 
 function plotErrorEllipse(mu, Sigma, p)
     s = -2 * log(1 - p);
@@ -46,7 +73,6 @@ function plot_ellipse(x,y,theta,a,b)
 end
 
 function plot_scatter( classes, legends)
-    figure;
     sz = 5;
     for i=1:length(classes)
         x = classes{i}(:,1);
