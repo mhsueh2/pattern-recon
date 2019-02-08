@@ -9,12 +9,17 @@ clsD = containers.Map(keys, {200, [15 10], [8 0;0 8], 'Class D'},'UniformValues'
 clsE = containers.Map(keys, {150, [10 5], [10 -5;-5 20], 'Class E'},'UniformValues',false);
 
 classes = {clsA, clsB, clsC, clsD, clsE};
+
 % Generating Clusters
 % % 1. Generates uncorrelate clusters
 for i=1:length(classes)
     class = classes{i};
     class('sample') = gen_cluster(class('N'), class('mu'), class('sigma'));
 end
+
+[sample_A, sample_B, sample_C, sample_D, sample_E] = deal( ...
+classes{1}('sample'),classes{2}('sample'),classes{3}('sample'), ... 
+classes{4}('sample'),classes{5}('sample'));
 
 % % 2. Plot samples
 % % % Plot Samples and Unit standard deviation contours
@@ -30,20 +35,73 @@ for i=1:length(classes)
 end
 
 % % % Plot A vs B
-sample_A = classes{1}('sample');
-sample_B = classes{2}('sample');
+
 figure;
 plot_scatter({sample_A,sample_B},{'Class A', 'Class B'})
 
 % % % Plot C vs D vs E
-sample_C = classes{3}('sample');
-sample_D = classes{4}('sample');
-sample_E = classes{5}('sample');
 figure;
 plot_scatter({sample_C,sample_D,sample_E},{'Class C', 'Class D', 'Class E'})
 
 % Plot Decision Boundries
 % % MED
+
+
+% % NN For A VS B
+NN_boundry = get_NN_boundry({sample_C, sample_D, sample_E});
+figure;
+plot_scatter({sample_C, sample_D, sample_E},{'Class A', 'Class B'})
+plot(NN_boundry(:,1), NN_boundry(:,2))
+
+function NN_boundry = get_NN_boundry(samples)
+% % Evaluates the samples and classify  points on the grid to get boundry
+% % Input: samples: Array
+% % Returns a xy cordinates requried to plot the boundry
+    [max_x, max_y, min_x, min_y] = get_min_and_max(samples)
+
+    NN_boundry = zeros(10000000, 2);
+    tracker = 0;
+
+    for x_=min_x:0.1:max_x
+        for y_=min_y:0.1:max_y
+            p = [x_ y_]
+            min_distances = inf(1, length(samples));
+            for i=1:length(min_distances)
+                samp = samples{i};
+                N = length(samp);
+                for j=1:N
+                    vector = [p;samp(j,:)];
+                    d = round(pdist(vector,'euclidean'),1);
+                    if d < min_distances(i), min_distances(i) = d; end
+                end
+            end
+            
+            if length(min_distances) > length(unique(min_distances))
+                tracker = tracker +1;
+                NN_boundry(tracker,:) = p;     
+            end
+
+        end
+    end
+
+    NN_boundry = NN_boundry(1:tracker,1:2);
+end
+
+function [max_x, max_y, min_x, min_y] = get_min_and_max(samples)
+% % Get min and max for an array of samples of N*2 matrix
+% % Input: Samples: Array 
+    [x_col, y_col] = deal(1, 2);
+    [max_x, max_y] = deal(-inf);
+    [min_x, min_y] = deal(inf);
+
+    for i=1:length(samples)
+        s = samples{i};
+        max_x = max(max_x, max(s(:,x_col)));
+        max_y = max(max_y, max(s(:,y_col)));
+        min_x = min(min_x, min(s(:,x_col)));
+        min_y = min(min_y, min(s(:,y_col)));
+    end
+end
 
 function plot_error_variance(class, p)
     mu = class('mu');
@@ -60,16 +118,6 @@ function plotErrorEllipse(mu, Sigma, p)
     a = (V * sqrt(D)) * [cos(t(:))'; sin(t(:))'];
 
     plot(a(1, :) + mu(1), a(2, :) + mu(2));
-end
-% This routine plots an ellipse with centre (x,y), axis lengths a,b
-% with major axis at an angle of theta radians from the horizontal.
-function plot_ellipse(x,y,theta,a,b)
-    if nargin<5, error('Too few arguments to Plot_Ellipse.'), end
-
-    np = 100;
-    ang = [0:np]*2*pi/np;
-    pts = [x;y]*ones(size(ang)) + [cos(theta) -sin(theta); sin(theta) cos(theta)]*[cos(ang)*a; sin(ang)*b];
-    plot( pts(1,:), pts(2,:) );
 end
 
 function plot_scatter( classes, legends)
