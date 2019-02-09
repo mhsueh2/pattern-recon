@@ -1,5 +1,8 @@
 clear all; close all; clc;
 
+% Define settings
+resolution = 0.25;
+
 % Define the Classes {N, True Mean, True Variance}
 keys = {'N', 'mu', 'sigma', 'name'};
 clsA = containers.Map(keys, {200, [5 10], [8 0;0 4], 'Class A'}, 'UniformValues',false);
