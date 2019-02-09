@@ -16,7 +16,7 @@ function  grid_ = classify_grid_by_kNN(samples, X, Y, k)
             for i=1:length(min_distances)
                 samp = samples{i};
                 N = length(samp);
-                k_min_d = inf(1, length(k))
+                k_min_d = inf(1, k)
                 for j=1:N
                     vector = [p;samp(j,:)];
                     d = round(pdist(vector,'euclidean'),5);
@@ -28,7 +28,7 @@ function  grid_ = classify_grid_by_kNN(samples, X, Y, k)
                         end
                     end
                 end
-                min_distances(i) = mean(k_min_d)
+                min_distances(i) = mean(k_min_d);
             end
     
             if length(min_distances) == length(unique(min_distances))
