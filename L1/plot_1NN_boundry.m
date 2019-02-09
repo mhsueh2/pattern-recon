@@ -16,5 +16,5 @@ NN_grid_CDE = classify_grid_by_kNN(samples, X, Y, k);
 figure;
 contourf(X, Y, NN_grid_CDE);
 hold on;
-plot_scatter(samples, {'1NNs Boundries', clsC('name'), clsD('name'), clsE('name')})
+plot_scatter(samples, {'1NN Boundries', clsC('name'), clsD('name'), clsE('name')})
 hold off;
