@@ -1,20 +1,22 @@
-NN_boundry = get_NN_boundry({sample_C, sample_D, sample_E});
+[X, Y] = create_2d_grid({sample_C, sample_D, sample_E})
+NN_grid = get_NN_boundry({sample_C, sample_D, sample_E}, X, Y);
 figure;
-plot_scatter({sample_C, sample_D, sample_E},{'Class A', 'Class B'})
-plot(NN_boundry(:,1), NN_boundry(:,2))
+contourf(X, Y, NN_grid);
+hold on;
+plot(NN_boundry(:,1), NN_boundry(:,2));
+hold off
 
-function NN_boundry = get_NN_boundry(samples)
+function  grid_ = classify_grid_by_NN(samples, X, Y)
 % % Evaluates the samples and classify  points on the grid to get boundry
-% % Input: samples: Array
+% % Input: samples: Array of samples; size: size of grid
 % % Returns a xy cordinates requried to plot the boundry
-    [max_x, max_y, min_x, min_y] = get_range(samples)
+    x_range = size(X)(1,1);
+    y_range = size(X)(1,2);
+    grid_ = zeros(x_range, y_range)
 
-    NN_boundry = zeros(10000000, 2);
-    tracker = 0;
-
-    for x_=min_x:0.1:max_x
-        for y_=min_y:0.1:max_y
-            p = [x_ y_]
+    for x_=1:x_range
+        for y_= 1:y_range
+            p = [X(x_,y_) Y(x_,y_)]
             min_distances = inf(1, length(samples));
             for i=1:length(min_distances)
                 samp = samples{i};
@@ -26,15 +28,20 @@ function NN_boundry = get_NN_boundry(samples)
                 end
             end
             
-            if length(min_distances) > length(unique(min_distances))
-                tracker = tracker +1;
-                NN_boundry(tracker,:) = p;     
-            end
 
+            if length(min_distances) > length(unique(min_distances))
+               grid_(p) = 0;
+            else
+                [min_, min_index] = deal(inf, 0);
+                for i=1:length(min_distances)
+                    if min_ < min_distances(i)
+                        min_ = min_distances(i);
+                        min_i = i;
+                    end
+                end
+            end
         end
     end
-
-    NN_boundry = NN_boundry(1:tracker,1:2);
 end
 
 
