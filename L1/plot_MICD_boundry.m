@@ -1,4 +1,3 @@
-%resolution = 0.05;
 % % A VS B
 samples = {sample_A, sample_B};
 [X, Y] = create_2d_grid(samples, resolution);

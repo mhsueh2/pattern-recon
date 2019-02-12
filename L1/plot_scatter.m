@@ -5,7 +5,7 @@ function plot_scatter( classes, legends, colors)
     for i=1:length(classes)
         x = classes{i}(:,1);
         y = classes{i}(:,2);
-        markers{i}
+        markers{i};
         scatter(x,y,sz,colors{i},markers{i});
         hold on;
     end
