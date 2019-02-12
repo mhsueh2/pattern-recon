@@ -19,11 +19,84 @@ legend('Class A Data', 'Covariance Error')
 % % % Plot A vs B
 plot_scatter({clsA,clsB},{'Class A', 'Class B'})
 % % % Plot C vs D vs E
+%plot_scatter({clsC,clsD,clsE},{'Class C', 'Class D', 'Class E'})
+
+% % 3. Create Clasifiers
+% % % 3.1 MED Classifier
+% Calculate means
+meanA = mean(clsA);
+meanB = mean(clsB);
+% means = [meanA; meanB]
+% Calculate distance between means
+% dist = pdist(means) % Default is euclidian
+% Calculate midpoint between 2 means
+midpoint = (meanA(:) + meanB(:)).'/2;
+% Calculate slope of connecting line
+m = (meanB(:,2) - meanA(:,2)) / (meanB(:,1) - meanA(:,1));
+perpM = -1 / m;
+line([meanA(:,1),meanB(:,1)],[meanA(:,2),meanB(:,2)]);
+% Calulate perpendicular line to the line connecting the means
+x = -15:0.25:25;
+y = perpM*(x - midpoint(:,1)) + midpoint(:,2);
+hPlot = plot(x,y,'DisplayName','Boundary AB');
+% legend('Boundary AB');
+axis equal;
+
+% % % ----------------------------------------------------
 plot_scatter({clsC,clsD,clsE},{'Class C', 'Class D', 'Class E'})
 
-% Plot Decision Boundries
-% % MED
-% BOOBOES
+meanC = mean(clsC);
+meanD = mean(clsD);
+meanE = mean(clsE);
+midpointCD = (meanC(:) + meanD(:)).'/2;
+midpointDE = (meanD(:) + meanE(:)).'/2;
+midpointEC = (meanE(:) + meanC(:)).'/2;
+mCD = (meanD(:,2) - meanC(:,2)) / (meanD(:,1) - meanC(:,1));
+mDE = (meanE(:,2) - meanD(:,2)) / (meanE(:,1) - meanD(:,1));
+mEC = (meanC(:,2) - meanE(:,2)) / (meanC(:,1) - meanE(:,1));
+perpCD = -1 / mCD;
+perpDE = -1 / mDE;
+perpEC = -1 / mEC;
+
+line([meanC(:,1),meanD(:,1)],[meanC(:,2),meanD(:,2)]);
+line([meanD(:,1),meanE(:,1)],[meanD(:,2),meanE(:,2)]);
+line([meanE(:,1),meanC(:,1)],[meanE(:,2),meanC(:,2)]);
+
+xCD = -15:0.01:25;
+yCD = perpCD *(xCD - midpointCD(:,1)) + midpointCD(:,2);
+% hPlot = plot(xCD,yCD,'DisplayName','Boundary CD');
+
+xDE = -15:0.01:25;
+yDE = perpDE *(xDE - midpointDE(:,1)) + midpointDE(:,2);
+% hPlot = plot(xDE,yDE,'DisplayName','Boundary DE');
+
+xEC = -15:0.01:25;
+yEC = perpEC *(xEC - midpointEC(:,1)) + midpointEC(:,2);
+% hPlot = plot(xEC,yEC,'DisplayName','Boundary EC');
+
+intersection = InterX([xCD;yCD],[xDE;yDE]);
+interX = intersection(1)
+interY = intersection(2)
+
+xCD = interX:0.01:25;
+yCD = perpCD *(xCD - midpointCD(:,1)) + midpointCD(:,2);
+hPlot = plot(xCD,yCD,'DisplayName','Boundary CD');
+
+xDE = interX:0.01:25;
+yDE = perpDE *(xDE - midpointDE(:,1)) + midpointDE(:,2);
+hPlot = plot(xDE,yDE,'DisplayName','Boundary DE');
+
+xEC = -15:0.01:interX;
+yEC = perpEC *(xEC - midpointEC(:,1)) + midpointEC(:,2);
+hPlot = plot(xEC,yEC,'DisplayName','Boundary EC');
+
+
+% Need to cut the lines at the intersection point...
+
+xlim([-10 30])
+ylim([-10 30])
+% axis equal;
+% % % ----------------------------------------------------
 
 function plotErrorEllipse(mu, Sigma, p)
     s = -2 * log(1 - p);
