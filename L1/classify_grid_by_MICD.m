@@ -7,7 +7,8 @@ function  grid_ = classify_grid_by_MICD(class_data, X, Y)
         x_range = size_(1, 1);
         y_range = size_(1, 2);
         grid_ = zeros(x_range, y_range);
-        num_classes = length(class_data);
+        num_classes = size(class_data);
+        num_classes = num_classes(1);
         
         for grid_index=1:numel(X)   
             [x, y] = deal(X(grid_index), Y(grid_index));

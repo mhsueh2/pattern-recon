@@ -6,7 +6,7 @@ for i=1:length(classes)
     name = classes{i}('name');
     sample = classes{i}('sample');
     plot_scatter({sample}, {});
-    plot_error_variance(classes{i}, 10);
+    plot_error_variance(classes{i}, 10, {'r'});
     legend(name, 'Covariance Error');
     hold off;
 end
