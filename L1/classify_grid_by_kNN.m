@@ -10,13 +10,13 @@ function  grid_ = classify_grid_by_kNN(samples, X, Y, k)
     
         for grid_index=1:numel(X)   
             [x, y] = deal(X(grid_index), Y(grid_index));
-            p = [x, y]
+            p = [x, y];
             min_distances = inf(1, length(samples));
             
             for i=1:length(min_distances)
                 samp = samples{i};
                 N = length(samp);
-                k_min_d = inf(1, k)
+                k_min_d = inf(1, k);
                 for j=1:N
                     vector = [p;samp(j,:)];
                     d = round(pdist(vector,'euclidean'),5);
