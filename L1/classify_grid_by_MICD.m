@@ -21,6 +21,6 @@ function  grid_ = classify_grid_by_MICD(class_data, X, Y)
             end
             
             [min_dist,min_index] = min(discrim);
-            grid_(grid_index) = min_index;
+            grid_(grid_index) = min_index; 
         end
 end
