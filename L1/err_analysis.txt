@@ -1,0 +1,36 @@
+
+>> error_analysis
+Confusion matrix MAP Case 1:
+   186    11
+    14   189
+
+P_error for MAP Case 1:
+    0.0625
+
+Confusion matrix MED Case 1:
+    18   181
+   182    19
+
+P_error for MED Case 1:
+    0.9075
+
+Confusion matrix MICD Case 1:
+   186    11
+    14   189
+
+P_error for MICD Case 1:
+    0.0625
+
+Confusion matrix 1NN Case 1:
+   199     2
+     1   198
+
+P_error for 1NN Case 1:
+    0.0075
+
+Confusion matrix 5NN Case 1:
+   187     3
+    13   197
+
+P_error for 5NN Case 1:
+    0.0400
