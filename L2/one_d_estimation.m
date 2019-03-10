@@ -47,3 +47,20 @@ est_p = exppdf(data_range_b, mu_b_e);
 title_ = 'Set B Estimation Assuming Exponential Density';
 
 plot_1d_estimation(b, data_range_b, true_p_b, est_p, title_);
+
+
+
+%% Uniform Estimation
+% Data Set A
+[min_a, max_a] = estimate_1d_uniform(a);
+est_p = unifpdf(data_range_a, min_a, max_a);
+title_ = 'Set A Estimation Assuming Uniform Density';
+
+plot_1d_estimation(a, data_range_a, true_p_a, est_p, title_);
+
+% Data Set B
+[min_b, max_b] = estimate_1d_uniform(b);
+est_p = unifpdf(data_range_b, min_b, max_b);
+title_ = 'Set B Estimation Assuming Uniform Density';
+
+plot_1d_estimation(b, data_range_b, true_p_b, est_p, title_);
