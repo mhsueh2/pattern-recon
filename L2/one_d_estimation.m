@@ -1,6 +1,7 @@
 % % Set given parameters and load data
 addpath('functions/');
 addpath('data/');
+resolution = 0.01;
 
 % Loads Set A: Gaussian, Set B: Exponential
 load('lab2_1.mat')
