@@ -2,6 +2,9 @@
 % % sequential discrimanats
 clear; close all; clc; path(pathdef);
 
+Section = [];
+Answer = [];
+
 %% Estimations
 run('one_d_estimation.m');
 run('two_d_estimation.m');
@@ -18,3 +21,5 @@ LIMIT = inf;
 PLOT_BOUNDRY = true;
 PLOT_ERRS = false;
 run('sequential_discriminant.m')
+
+table(Section, Answer)
