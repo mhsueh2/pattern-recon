@@ -16,9 +16,9 @@ y_range = min_y:resolution:max_y;
 [X,Y] = meshgrid(x_range, y_range);
 
 %% Classify Grid With ML Using Gaussian PDF
-P_A = compute_2d_gaussian_grid(al, X, Y);
-P_B = compute_2d_gaussian_grid(bl, X, Y);
-P_C = compute_2d_gaussian_grid(cl, X, Y);
+P_A = compute_pdf_grid_gaussian(al, X, Y);
+P_B = compute_pdf_grid_gaussian(bl, X, Y);
+P_C = compute_pdf_grid_gaussian(cl, X, Y);
 
 clsfied_grid = classify_by_ML(P_A, P_B, P_C);
 title_ = 'ML Classification Using Gaussian PDF';
@@ -33,9 +33,9 @@ cov = [var 0; 0 var];
 win = reshape(mvnpdf([X(:) Y(:)], mu, cov), length(X), length(Y));
 parzen_res = [resolution min_x min_y max_x max_y];
 
-[P_A, x_range, y_range] = estimate_2d_parzen(al,parzen_res, win);
-[P_B, x_range, y_range] = estimate_2d_parzen(bl,parzen_res, win);
-[P_C, x_range, y_range] = estimate_2d_parzen(cl,parzen_res, win);
+[P_A, x_range, y_range] = compute_pdf_grid_parzen(al,parzen_res, win);
+[P_B, x_range, y_range] = compute_pdf_grid_parzen(bl,parzen_res, win);
+[P_C, x_range, y_range] = compute_pdf_grid_parzen(cl,parzen_res, win);
 
 [X, Y] = meshgrid(x_range, y_range);
 clsfied_grid = classify_by_ML(P_A, P_B, P_C);
