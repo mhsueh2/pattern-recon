@@ -8,8 +8,8 @@ load('lab2_2.mat');
 % Define grid
 resolution = 1;
 min_x = min([min(al(:,1)) min(bl(:,1)) min(cl(:,1))]) - resolution;
-max_x = max([max(al(:,1)),max(bl(:,1)),max(cl(:,1))]) - resolution;
-min_y = min([min(al(:,2)),min(bl(:,2)),min(cl(:,2))]) + resolution;
+max_x = max([max(al(:,1)),max(bl(:,1)),max(cl(:,1))]) + resolution;
+min_y = min([min(al(:,2)),min(bl(:,2)),min(cl(:,2))]) - resolution;
 max_y = max([max(al(:,2)),max(bl(:,2)),max(cl(:,2))]) + resolution;
 x_range = min_x:resolution:max_x;
 y_range = min_y:resolution:max_y;
