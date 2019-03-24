@@ -22,7 +22,8 @@ P_C = compute_pdf_grid_gaussian(cl, X, Y);
 
 clsfied_grid = classify_by_ML(P_A, P_B, P_C);
 title_ = 'ML Classification Using Gaussian PDF';
-plot_ML_boundry(clsfied_grid, X, Y, at, bt, ct, title_);
+classifier = 'ML Decision Boundry';
+plot_boundry(clsfied_grid, X, Y, {at, bt, ct}, title_, classifier);
 
 %% Classify Grid With ML Using Parzen PDF
 % Define required parameters, Gaussian Parzen Window and Parzen resolution
@@ -40,7 +41,7 @@ parzen_res = [resolution min_x min_y max_x max_y];
 [X, Y] = meshgrid(x_range, y_range);
 clsfied_grid = classify_by_ML(P_A, P_B, P_C);
 title_ = 'ML Classification Using Parzen PDF';
-plot_ML_boundry(clsfied_grid, X, Y, at, bt, ct, title_);
+plot_boundry(clsfied_grid, X, Y, {at, bt, ct}, title_, classifier);
 
 
 
