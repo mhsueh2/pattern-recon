@@ -21,6 +21,9 @@ LIMIT = inf;
 PLOT_BOUNDRY = true;
 PLOT_ERRS = false;
 
-run('sequential_discriminant.m')
+% Get 3 sequential classifier
+for i=1:3
+    run('sequential_classifier.m')
+end
 
 table(Section, Answer)
