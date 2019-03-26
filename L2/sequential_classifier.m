@@ -20,51 +20,56 @@ y_range = min_y:resolution:max_y;
 [X,Y] = meshgrid(x_range, y_range);
 
 %% Compute Sequential Discrimnants with MED Classifier
-subset_a = a;
-subset_b = b;
-discriminant_list = {};
-n_ab_list = {};
-n_ba_list = {};
-error_rates_list = {};
-j = 0;
-while( j < J && ~isempty(subset_a) && ~isempty(subset_b))
-    iter_index = 0;
-    valid_discriminate = false;
-    [n_ab, n_ba] = deal(zeros(1), zeros(1));
-    error_rates = [];
-    while(~isempty(n_ab) && ~isempty(n_ba) && iter_index < LIMIT)
-        rd_row_a = randi(size(subset_a,1), 1);
-        rd_row_b = randi(size(subset_b,1), 1);
-        prot_a = subset_a(rd_row_a, :);
-        prot_b = subset_b(rd_row_b, :);
+errors_list = {};
+for n_iter=1:N
+    subset_a = a;
+    subset_b = b;
+    discriminant_list = {};
+    n_ab_list = {};
+    n_ba_list = {};
+    errors = [];
+    j = 0;
+    while( j < J && ~isempty(subset_a) && ~isempty(subset_b))
+        valid_discriminate = false;
+        [n_ab, n_ba] = deal(zeros(1), zeros(1));
 
-        G = classify_by_MED(prot_a, prot_b, X, Y);
-        [n_aa, n_ab] = evaluate_predictions(subset_a, G, X, Y, cls_map('a'));
-        [n_bb, n_ba] = evaluate_predictions(subset_b, G, X, Y, cls_map('b'));
-        
-        err_rate = (length(n_ab)+length(n_ba))/400;
-        error_rates = [error_rates err_rate];
-        iter_index = iter_index + 1;
+        while(~isempty(n_ab) && ~isempty(n_ba))
+            rd_row_a = randi(size(subset_a,1), 1);
+            rd_row_b = randi(size(subset_b,1), 1);
+            prot_a = subset_a(rd_row_a, :);
+            prot_b = subset_b(rd_row_b, :);
+
+            G = classify_by_MED(prot_a, prot_b, X, Y);
+            [n_aa, n_ab] = evaluate_predictions(subset_a, G, X, Y, cls_map('a'));
+            [n_bb, n_ba] = evaluate_predictions(subset_b, G, X, Y, cls_map('b'));
+        end
+
+        discriminant_list{end+1} = G;
+        n_ab_list{end+1} = n_ab;
+        n_ba_list{end+1} = n_ba;
+        if PLOT_ERRS
+            err_rate = (length(n_ab)+length(n_ba)) / 400;
+            errors = [errors err_rate];
+        end
+
+        if isempty(n_ab); subset_b = remove_correct(subset_b, n_bb); end
+        if isempty(n_ba); subset_a = remove_correct(subset_a, n_aa); end
+        j = j+1;
+    end
+
+    if PLOT_BOUNDRY
+        grid_SC = classify_by_SC(discriminant_list, n_ab_list, n_ba_list, cls_map);
+        title_ = 'Sequential Classifier Decision Boundry';
+        plot_boundry(grid_SC, X, Y, {a,b}, title_, title_)
     end
     
-    discriminant_list{end+1} = G;
-    n_ab_list{end+1} = n_ab;
-    n_ba_list{end+1} = n_ba;
-    error_rates_list{end+1} = error_rates;
-            
-    if isempty(n_ab); subset_b = remove_correct(subset_b, n_bb); end
-    if isempty(n_ba); subset_a = remove_correct(subset_a, n_aa); end
-    j = j+1;
-end
-
-if PLOT_BOUNDRY
-    grid_SC = classify_by_SC(discriminant_list, n_ab_list, n_ba_list, cls_map);
-    title_ = 'Sequential Classifier Decision Boundry';
-    plot_boundry(grid_SC, X, Y, {a,b}, title_, title_)
+    if PLOT_ERRS
+        errors_list{end+1} = errors;
+    end
 end
 
 if PLOT_ERRS
-    plot_error_rates(error_rates_list)
+    plot_error_rates(errors_list);
 end
 
 function set_ = remove_correct(set_, correct_points_rows)

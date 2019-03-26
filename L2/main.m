@@ -19,17 +19,15 @@ run('two_d_estimation.m');
 
 % Compute 3 sequential classifiers and plot them
 J = inf;
-LIMIT = inf;
+N = 3;
 PLOT_BOUNDRY = true;
 PLOT_ERRS = false;
 
-for i=1:3
-    run('sequential_classifier.m')
-end
+run('sequential_classifier.m')
 
-% Compute 5 sequentail discriminatns and plot the error rates
+% Limit to 5 sequential discriminants, but learn each of them 20 times and plot the error rates
 J = 5;
-LIMIT = 20;
+N = 20;
 PLOT_BOUNDRY = false;
 PLOT_ERRS = true;
 
